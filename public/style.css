@@ -12,3 +12,33 @@ h1 {
 .main {
   margin: 10px 30px;
 }
+
+.poll-setup {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.poll-setup * {
+  margin-bottom: 15px;
+}
+
+.poll-setup {
+  margin-bottom: -10px;
+}
+
+.poll-open p {
+  color: rgb(0, 182, 0);
+}
+
+.poll-closed p {
+  color: rgb(223, 0, 0);
+}
+
+.actions {
+  margin-top: 0;
+}
+
+.actions button {
+  margin-bottom: 10px;
+}
