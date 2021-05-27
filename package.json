@@ -36,6 +36,10 @@
   "devDependencies": {
     "css-loader": "^5.2.6",
     "dotenv": "^10.0.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.6.0",
     "nodemon": "^2.0.7",
