@@ -1,0 +1,31 @@
+{
+  "name": "vbpoll",
+  "version": "1.0.0",
+  "description": "A polling system for Vestaboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SonicRift/vbpoll.git"
+  },
+  "author": "Shane Sutro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SonicRift/vbpoll/issues"
+  },
+  "homepage": "https://github.com/SonicRift/vbpoll#readme",
+  "dependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "express": "^4.17.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "webpack": "^5.38.0",
+    "webpack-cli": "^4.7.0"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  }
+}
