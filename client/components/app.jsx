@@ -31,7 +31,8 @@ class App extends React.Component {
         a: 'Modern Market',
         b: 'Chipotle',
         c: 'Sushi Den',
-        openUntil: '2021-05-27T12:45',
+        openAsOf: '2021-05-27T00:00',
+        openUntil: '2021-05-30T12:45',
         frequency: '1',
       },
     };
@@ -90,7 +91,7 @@ class App extends React.Component {
     })
       .then((res) => {
         if (res.status === 201) {
-          const allAnswerButtons = document.getElementsByClassName('answer')
+          const allAnswerButtons = document.getElementsByClassName('answer');
           for (let button of allAnswerButtons) {
             button.classList.remove('chosen');
           }

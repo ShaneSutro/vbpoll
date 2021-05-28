@@ -29,6 +29,7 @@
     "babel-loader": "^8.2.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "express": "^4.17.1",
@@ -43,7 +44,6 @@
   },
   "devDependencies": {
     "css-loader": "^5.2.6",
-    "dotenv": "^10.0.0",
     "eslint-plugin-import": "^2.23.3",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.23.2",
