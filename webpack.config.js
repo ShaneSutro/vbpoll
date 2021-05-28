@@ -6,6 +6,9 @@ module.exports = {
   entry: './client/index.jsx',
   target: 'web',
   mode: 'development',
+  devServer: {
+    historyApiFallback: true,
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import * as VB from '@vestaboard/installables';
 import moment from 'moment';
 import PollSetup from './pollSetup';
@@ -35,15 +36,19 @@ class App extends React.Component {
       poll: {
         allowUnlimitedVotes: '1',
         isOpen: true,
-        question: 'Where is Oliver Twist set?',
-        a: 'London',
-        b: 'Seattle',
-        c: 'New York',
+        question: 'Where should we get lunch today?',
+        a: 'Modern Market',
+        b: 'Chipotle',
+        c: 'In-n-out',
         openUntil: '2021-05-27T12:45',
         frequency: '1',
       },
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
+  }
+
+  checkMode() {
+    // TODO: Check route and implement different views here
   }
 
   componentDidMount() {
@@ -67,11 +72,14 @@ class App extends React.Component {
   render() {
     const { mode, poll } = this.state;
     return (
-      <div className="top">
-        {mode === 'config'
-          ? <PollSetup state={{ ...this.state }} />
-          : <Vote state={{ ...poll }} />}
-      </div>
+      <Router>
+        <Switch>
+          <Route exact path="/config" />
+          <PollSetup state={{ ...this.state }} />
+          <Route path="/:id" />
+          <Vote state={{ ...poll }} />
+        </Switch>
+      </Router>
     );
   }
 }

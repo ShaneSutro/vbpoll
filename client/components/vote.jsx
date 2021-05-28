@@ -11,13 +11,13 @@ const Vote = ({ state }) => (
         <V.SubTitle>{state.question}</V.SubTitle>
       </div>
       <div className="answer-set">
-        <div className="answer-a">
+        <div className="answer answer-a">
           <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>A. {state.a}</V.Button>
         </div>
-        <div className="answer-b">
+        <div className="answer answer-b">
           <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>B. {state.b}</V.Button>
         </div>
-        <div className="answer-c chosen">
+        <div className="answer answer-c chosen">
           <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>C. {state.c}</V.Button>
         </div>
       </div>
