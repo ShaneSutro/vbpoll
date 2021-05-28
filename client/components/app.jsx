@@ -2,6 +2,7 @@ import React from 'react';
 import * as VB from '@vestaboard/installables';
 import moment from 'moment';
 import PollSetup from './pollSetup';
+import Vote from './vote';
 
 const frequencyOptions = [
   { id: '1', name: 'Every minute' },
@@ -17,6 +18,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mode: 'vote',
       pollID: '3a83np',
       updating: false,
       newPoll: true,
@@ -33,10 +35,10 @@ class App extends React.Component {
       poll: {
         allowUnlimitedVotes: '1',
         isOpen: true,
-        question: '',
-        a: '',
-        b: '',
-        c: '',
+        question: 'Where is Oliver Twist set?',
+        a: 'London',
+        b: 'Seattle',
+        c: 'New York',
         openUntil: '2021-05-27T12:45',
         frequency: '1',
       },
@@ -48,7 +50,7 @@ class App extends React.Component {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 7);
-    const pollData = {...this.state.poll}; // TODO: This should come from the database eventually
+    const pollData = { ...this.state.poll }; // TODO: This should come from the database eventually
     pollData.openUntil = `${moment(tomorrow).format('YYYY-MM-DD')}T23:59`;
     pollData.isOpen = false;
     this.setState({ poll: pollData });
@@ -63,9 +65,12 @@ class App extends React.Component {
   }
 
   render() {
+    const { mode, poll } = this.state;
     return (
       <div className="top">
-        <PollSetup state={{ ...this.state }} />
+        {mode === 'config'
+          ? <PollSetup state={{ ...this.state }} />
+          : <Vote state={{ ...poll }} />}
       </div>
     );
   }
