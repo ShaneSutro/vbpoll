@@ -18,6 +18,7 @@ const PollSetup = (props) => {
     newPoll,
     pollID 
   } = props.state;
+  const { onChange, save } = props.actions;
   return (
     <div className="main">
       <VB.Title>VB Polls</VB.Title>
@@ -27,16 +28,16 @@ const PollSetup = (props) => {
         ? <div className="poll-open"><VB.Body><VB.Icon color="white" type="check" /> This poll is open!</VB.Body></div>
         : <div className="poll-closed"><VB.Body><VB.Icon color="white" type="close" /> No Active Poll</VB.Body></div>}
       <div className="poll-setup">
-        <VB.Input label="Poll Question" multiline onValueChange={(val) => this.inputFieldChange(val, 'question')} value={poll.question} />
-        <VB.Input label="Option 1" error="" onValueChange={(val) => this.inputFieldChange(val, 'a')} value={poll.a} />
-        <VB.Input label="Option 2" error="" onValueChange={(val) => this.inputFieldChange(val, 'b')} value={poll.b} />
-        <VB.Input label="Option 3" error="" onValueChange={(val) => this.inputFieldChange(val, 'c')} value={poll.c} />
-        <VB.Input label="Poll Open Until" type="datetime-local" onValueChange={(val) => this.inputFieldChange(val, 'openUntil')} value={poll.openUntil} />
-        <VB.Select onValueChange={(val) => this.inputFieldChange(val, 'frequency')} value={poll.frequency} label="Update Vestaboard How Often?" options={frequencyOptions} />
+        <VB.Input label="Poll Question" multiline onValueChange={(val) => onChange(val, 'question')} value={poll.question} />
+        <VB.Input label="Option 1" error="" onValueChange={(val) => onChange(val, 'a')} value={poll.a} />
+        <VB.Input label="Option 2" error="" onValueChange={(val) => onChange(val, 'b')} value={poll.b} />
+        <VB.Input label="Option 3" error="" onValueChange={(val) => onChange(val, 'c')} value={poll.c} />
+        <VB.Input label="Poll Open Until" type="datetime-local" onValueChange={(val) => onChange(val, 'openUntil')} value={poll.openUntil} />
+        <VB.Select onValueChange={(val) => onChange(val, 'frequency')} value={poll.frequency} label="Update Vestaboard How Often?" options={frequencyOptions} />
       </div>
       <div className="actions">
-        <VB.RadioButtons options={[{ id: '0', name: 'Allow 1 Vote Per IP Address' }, { id: '1', name: 'Allow Unlimited Votes (Default)' }]} onValueChange={(val) => this.inputFieldChange(val, 'allowUnlimitedVotes')} value={poll.allowUnlimitedVotes} />
-        <VB.Button buttonType="primary">{updating && !newPoll ? 'Update' : 'Save'}</VB.Button>
+        <VB.RadioButtons options={[{ id: '0', name: 'Allow 1 Vote Per IP Address' }, { id: '1', name: 'Allow Unlimited Votes (Default)' }]} onValueChange={(val) => onChange(val, 'allowUnlimitedVotes')} value={poll.allowUnlimitedVotes} />
+        <VB.Button onClick={save} buttonType="primary">{updating && !newPoll ? 'Update' : 'Save'}</VB.Button>
         {poll.isOpen
           ? <VB.Button buttonType="danger" endIcon={<VB.Icon color="white" type="close" />}>Close Poll</VB.Button>
           : newPoll

@@ -15,7 +15,7 @@ body {
 
 @media only screen and (max-width: 768px) {
   #app {
-    width: 90vw;
+    width: 100vw;
   }
 }
 
@@ -61,7 +61,8 @@ h1 {
 
 /* VOTE */
 .vote {
-  height: 90vh;
+  margin-top: 10px;
+  height: 98vh;
   display: grid;
   grid-template-rows: 1fr 10fr 1fr;
   justify-content: center;

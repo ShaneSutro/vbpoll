@@ -5,16 +5,6 @@ import moment from 'moment';
 import PollSetup from './pollSetup';
 import Vote from './vote';
 
-const frequencyOptions = [
-  { id: '1', name: 'Every minute' },
-  { id: '2', name: 'Every 5 minutes' },
-  { id: '3', name: 'Every 10 minutes' },
-  { id: '4', name: 'Every 15 minutes' },
-  { id: '5', name: 'Every 20 minutes' },
-  { id: '6', name: 'Every 30 minutes' },
-  { id: '7', name: 'Every 60 minutes' },
-];
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -36,19 +26,16 @@ class App extends React.Component {
       poll: {
         allowUnlimitedVotes: '1',
         isOpen: true,
-        question: 'Where should we get lunch today?',
+        question: 'Where should we go for lunch today?',
         a: 'Modern Market',
         b: 'Chipotle',
-        c: 'In-n-out',
+        c: 'Sushi Den',
         openUntil: '2021-05-27T12:45',
         frequency: '1',
       },
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
-  }
-
-  checkMode() {
-    // TODO: Check route and implement different views here
+    this.savePoll = this.savePoll.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +46,15 @@ class App extends React.Component {
     pollData.openUntil = `${moment(tomorrow).format('YYYY-MM-DD')}T23:59`;
     pollData.isOpen = false;
     this.setState({ poll: pollData });
+  }
+
+  checkMode() {
+    // TODO: Check route and implement different views here
+  }
+
+  savePoll() {
+    console.log('Saving poll information');
+    console.log(this.state.poll);
   }
 
   inputFieldChange(val, inputName) {
@@ -74,10 +70,12 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/config" />
-          <PollSetup state={{ ...this.state }} />
-          <Route path="/:id" />
-          <Vote state={{ ...poll }} />
+          <Route exact path="/config">
+            <PollSetup actions={{ onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
+          </Route>
+          <Route path="/:id">
+            <Vote state={{ ...poll }} />
+          </Route>
         </Switch>
       </Router>
     );
