@@ -36,7 +36,7 @@ const PollSetup = (props) => {
         <VB.Select onValueChange={(val) => onChange(val, 'frequency')} value={poll.frequency} label="Update Vestaboard How Often?" options={frequencyOptions} />
       </div>
       <div className="actions">
-        <VB.RadioButtons options={[{ id: '0', name: 'Allow 1 Vote Per IP Address' }, { id: '1', name: 'Allow Unlimited Votes (Default)' }]} onValueChange={(val) => onChange(val, 'allowUnlimitedVotes')} value={poll.allowUnlimitedVotes} />
+        <VB.RadioButtons options={[{ id: '0', name: 'Allow 1 Vote Per IP Address' }, { id: '1', name: 'Allow Unlimited Votes' }]} onValueChange={(val) => onChange(val, 'allowUnlimitedVotes')} value={poll.allowUnlimitedVotes} />
         <VB.Button onClick={save} buttonType="primary">{updating && !newPoll ? 'Update' : 'Save'}</VB.Button>
         {poll.isOpen
           ? <VB.Button buttonType="danger" endIcon={<VB.Icon color="white" type="close" />}>Close Poll</VB.Button>

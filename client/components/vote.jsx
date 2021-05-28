@@ -2,8 +2,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import * as V from '@vestaboard/installables';
 
-const Vote = ({ state }) => {
+const Vote = ({ state, actions }) => {
   const { id } = useParams();
+  const { saveVote } = actions;
 
   return (
   <div className="vote">
@@ -17,14 +18,14 @@ const Vote = ({ state }) => {
       </div>
       <div className="answer-set">
         <div className="answer answer-a">
-          <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>A. {state.a}</V.Button>
+          <V.Button onClick={() => saveVote('a')} buttonType="outline" endIcon={<V.Icon color="white" type="" />}>A. {state.a}</V.Button>
         </div>
-        <div className="answer answer-b chosen">
-          <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>B. {state.b}</V.Button>
+        <div className="answer answer-b">
+          <V.Button onClick={() => saveVote('b')} buttonType="outline" endIcon={<V.Icon color="white" type="" />}>B. {state.b}</V.Button>
         </div>
         <div className="answer answer-c">
           {state.c
-            ? <V.Button buttonType="outline" endIcon={<V.Icon color="white" type="" />}>C. {state.c}</V.Button>
+            ? <V.Button onClick={() => saveVote('c')} buttonType="outline" endIcon={<V.Icon color="white" type="" />}>C. {state.c}</V.Button>
             : null
           }
         </div>

@@ -8,6 +8,9 @@ module.exports = {
   mode: 'development',
   devServer: {
     historyApiFallback: true,
+    proxy: {
+      '**': 'http://localhost:3000',
+    },
   },
   output: {
     path: path.resolve(__dirname, 'public'),

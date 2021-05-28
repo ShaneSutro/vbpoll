@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import * as VB from '@vestaboard/installables';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import moment from 'moment';
 import PollSetup from './pollSetup';
 import Vote from './vote';
@@ -9,7 +8,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: 'vote',
+      user: '',
+      userHasVoted: false,
+      userVotedFor: '',
       pollID: '3a83np',
       updating: false,
       newPoll: true,
@@ -24,7 +25,7 @@ class App extends React.Component {
         frequency: '1',
       },
       poll: {
-        allowUnlimitedVotes: '1',
+        allowUnlimitedVotes: '0',
         isOpen: true,
         question: 'Where should we go for lunch today?',
         a: 'Modern Market',
@@ -36,25 +37,68 @@ class App extends React.Component {
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
     this.savePoll = this.savePoll.bind(this);
+    this.getVoteStatus = this.getVoteStatus.bind(this);
+    this.saveVote = this.saveVote.bind(this);
   }
 
   componentDidMount() {
+    let { pollID } = this.props.match.params;
+    if (pollID !== 'config') { this.setState({ pollID }); }
+    this.getVoteStatus();
     const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 7);
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
     const pollData = { ...this.state.poll }; // TODO: This should come from the database eventually
-    pollData.openUntil = `${moment(tomorrow).format('YYYY-MM-DD')}T23:59`;
-    pollData.isOpen = false;
+    pollData.openUntil = `${moment(nextWeek).format('YYYY-MM-DD')}T23:59`;
     this.setState({ poll: pollData });
   }
 
-  checkMode() {
-    // TODO: Check route and implement different views here
+  async getVoteStatus() {
+    const { pollID } = this.state;
+    let ip;
+    let userHasVoted;
+    let userVotedFor;
+    await fetch('https://api.ipify.org?format=json', { mode: 'cors' })
+      .then((res) => res.json())
+      .then((data) => {
+        ip = data.ip;
+        this.setState({ user: ip });
+      });
+    fetch(`/verify/${pollID}/${ip}`)
+      .then((res) => res.json())
+      .then((data) => {
+        userHasVoted = data.voted;
+        userVotedFor = data.votedForOption;
+        this.setState({ userHasVoted, userVotedFor });
+        if (this.state.poll.allowUnlimitedVotes === '0') {
+          document.getElementsByClassName(`answer-${userVotedFor}`)[0].classList.add('chosen');
+        }
+      });
   }
 
   savePoll() {
     console.log('Saving poll information');
     console.log(this.state.poll);
+  }
+
+  saveVote(option) {
+    let { pollID, user } = this.state;
+    fetch(`/vote/${pollID}/${user}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ option }),
+    })
+      .then((res) => {
+        if (res.status === 201) {
+          const allAnswerButtons = document.getElementsByClassName('answer')
+          for (let button of allAnswerButtons) {
+            button.classList.remove('chosen');
+          }
+          const votedForButton = document.getElementsByClassName(`answer-${option}`)[0];
+          votedForButton.classList.add('chosen');
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   inputFieldChange(val, inputName) {
@@ -74,7 +118,7 @@ class App extends React.Component {
             <PollSetup actions={{ onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
           </Route>
           <Route path="/:id">
-            <Vote state={{ ...poll }} />
+            <Vote actions={{ saveVote: this.saveVote }} state={{ ...poll }} />
           </Route>
         </Switch>
       </Router>
@@ -82,4 +126,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
