@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const PollSchema = new mongoose.Schema({
   pollID: String,
   voteCounts: {
     totalVotes: Number,
@@ -24,3 +24,14 @@ module.exports = new mongoose.Schema({
     votedFor: String,
   }],
 });
+
+const SubSchema = new mongoose.Schema({
+  subId: String,
+  activePoll: String,
+  previousPolls: [String],
+});
+
+module.exports = {
+  PollSchema,
+  SubSchema,
+};

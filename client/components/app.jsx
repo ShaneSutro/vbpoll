@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router
 import moment from 'moment';
 import PollSetup from './pollSetup';
 import Vote from './vote';
+import sharedFunctions from '../sharedFunctions';
 
 class App extends React.Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.regenerateId();
     let { pollID } = this.props.match.params;
     if (pollID !== 'config') { this.setState({ pollID }); }
     this.getVoteStatus();
@@ -82,11 +84,16 @@ class App extends React.Component {
     console.log(this.state.poll);
   }
 
+  regenerateId() {
+    const pollID = sharedFunctions.generatePollId();
+    this.setState({ pollID });
+  }
+
   saveVote(option) {
     let { pollID, user } = this.state;
     fetch(`/vote/${pollID}/${user}`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ option }),
     })
       .then((res) => {
