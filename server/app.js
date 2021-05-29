@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const db = require('../data/model');
+const polls = require('./modules/polls');
 
 const app = express();
 
@@ -14,12 +15,15 @@ app.get('/config/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
+app.use('/polls', polls);
+
 app.get('/:poll', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
 app.get('/verify/:id/:ip', (req, res) => {
   const { id, ip } = req.params;
+  console.log(id, ip);
   // TODO: Check against database to see if this ip has voted
   res.send({ voted: false, votedForOption: 'c' });
 });

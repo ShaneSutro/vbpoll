@@ -1,0 +1,26 @@
+{
+  "pollID": "abc123",
+  "voteCounts": {
+    "totalVotes": 1,
+    "a": 1,
+    "b": 0,
+    "c": 0
+  },
+  "poll": {
+    "allowUnlimitedVotes": "0",
+    "isOpen": true,
+    "question": "Where should we get lunch today?",
+    "a": "Modern Market",
+    "b": "Chipotle",
+    "c": "Sushi Den",
+    "openAsOf": "2021-05-27T00:01",
+    "openUntil": "2021-05-31T23:59",
+    "frequency": "0"
+  },
+  "votes": [
+    {
+    "ip": "67.190.162.250",
+    "votedFor": "a"
+    }
+  ]
+}

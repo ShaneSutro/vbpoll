@@ -11,7 +11,7 @@ class App extends React.Component {
       user: '',
       userHasVoted: false,
       userVotedFor: '',
-      pollID: '3a83np',
+      pollID: 'abc123',
       updating: false,
       newPoll: true,
       previouslySaved: {
