@@ -4,6 +4,7 @@ const cors = require('cors');
 const db = require('../data/model');
 const polls = require('./modules/polls');
 const subscriptions = require('./modules/subscriptions');
+const config = require('./modules/config');
 
 const app = express();
 
@@ -12,10 +13,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // app.use(express.static(path.resolve(__dirname, '../public')));
 
-app.get('/config', (req, res) => {
+app.get('/edit', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
+app.use('/config', config);
 app.use('/polls', polls);
 app.use('/subscriptions', subscriptions);
 

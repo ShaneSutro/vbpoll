@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const { PollSchema, SubSchema } = require('./pollSchema');
+const { PollSchema, SubSchema, InstallationSchema } = require('./pollSchema');
 
 const Poll = mongoose.model('Poll', PollSchema);
 const Subscription = mongoose.model('Subscription', SubSchema);
+const Installation = mongoose.model('Installation', InstallationSchema);
 
 module.exports = {
   poll: {
@@ -27,12 +28,23 @@ module.exports = {
     }),
   },
   subscription: {
-    createNew: async (subId) => {
+    add: async (data) => {
       await Subscription.findOneAndUpdate(
-        { subId },
-        { subId, activePoll: '', previousPolls: [] },
+        { subId: data.subId },
+        data,
         { upsert: true, new: true, runValidators: true },
-      );
+      )
+        .catch((err) => err);
+    },
+  },
+  installation: {
+    add: async (data) => {
+      await Installation.findOneAndUpdate(
+        { installationId: data.installationId },
+        data,
+        { upsert: true, new: true, runValidators: true },
+      )
+        .catch((err) => err);
     },
   },
 };

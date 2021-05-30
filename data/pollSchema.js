@@ -23,15 +23,24 @@ const PollSchema = new mongoose.Schema({
     ip: String,
     votedFor: String,
   }],
-});
+}, { timestamps: true });
 
 const SubSchema = new mongoose.Schema({
   subId: String,
+  installationId: String,
   activePoll: String,
   previousPolls: [String],
-});
+}, { timestamps: true });
+
+const InstallationSchema = new mongoose.Schema({
+  installationId: String,
+  apiKey: String,
+  apiSecret: String,
+  installableId: String,
+}, { timestamps: true });
 
 module.exports = {
   PollSchema,
   SubSchema,
+  InstallationSchema,
 };

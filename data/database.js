@@ -5,6 +5,7 @@ const connect = (connection) => new Promise((resolve, reject) => {
     .connect(connection, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     })
     .then(() => {
       console.log('👍 DB');
