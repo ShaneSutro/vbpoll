@@ -14,6 +14,11 @@ const connect = (connection) => new Promise((resolve, reject) => {
     .catch((err) => reject(err));
 });
 
+const disconnect = () => {
+  mongoose.disconnect();
+};
+
 module.exports = {
   connect,
+  disconnect,
 };

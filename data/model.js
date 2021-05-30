@@ -36,6 +36,11 @@ module.exports = {
       )
         .catch((err) => err);
     },
+    getAll: () => new Promise((resolve, reject) => {
+      Subscription.find({})
+        .then((records) => resolve(records))
+        .catch((err) => reject(err));
+    }),
   },
   installation: {
     add: async (data) => {
@@ -46,5 +51,10 @@ module.exports = {
       )
         .catch((err) => err);
     },
+    get: async (search) => new Promise((resolve, reject) => {
+      Installation.findOne(search)
+        .then((record) => resolve(record))
+        .catch((err) => reject(err));
+    }),
   },
 };

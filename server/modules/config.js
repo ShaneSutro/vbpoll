@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
   } else if (requestType === 'SubscriptionCreated') {
     const saveToDb = {
       subId: req.body.subscription.id,
+      updateEveryMinutes: 1,
       installationId: req.body.subscription.installation.id,
       activePoll: 'none',
       previousPolls: [],

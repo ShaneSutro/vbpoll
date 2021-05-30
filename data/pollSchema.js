@@ -28,6 +28,7 @@ const PollSchema = new mongoose.Schema({
 const SubSchema = new mongoose.Schema({
   subId: String,
   installationId: String,
+  updateEveryMinutes: Number,
   activePoll: String,
   previousPolls: [String],
 }, { timestamps: true });

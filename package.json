@@ -28,6 +28,7 @@
     "babel": "^6.23.0",
     "babel-loader": "^8.2.2",
     "body-parser": "^1.19.0",
+    "bree": "^6.2.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "eslint": "^7.27.0",
