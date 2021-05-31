@@ -21,6 +21,7 @@ const schedule = async (sub) => {
     scheduledFor = new Date(scheduledFor);
     try {
       subJobs.push({
+        installableId: associatedInstallation.installableId,
         subId: sub.subId,
         apiKey: associatedInstallation.apiKey,
         apiSecret: associatedInstallation.apiSecret,

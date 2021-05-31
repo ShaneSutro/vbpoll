@@ -1,16 +1,14 @@
 const Bree = require('bree');
 
-const listen = () => 0;
-
 const bree = new Bree({
   jobs: [
     {
       name: 'scheduler',
-      interval: '60m',
+      cron: '0 * * * *',
     },
     {
       name: 'run',
-      interval: '1m',
+      cron: '* * * * *',
     },
   ],
 });

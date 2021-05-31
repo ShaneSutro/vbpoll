@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const PollSchema = new mongoose.Schema({
   pollID: String,
+  subId: String,
   voteCounts: {
     totalVotes: Number,
     a: Number,
@@ -45,6 +46,7 @@ const JobSchema = new mongoose.Schema({
   subId: String,
   apiKey: String,
   apiSecret: String,
+  installableId: String,
 });
 
 module.exports = {
