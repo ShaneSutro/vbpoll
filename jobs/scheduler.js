@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const schedule = async (sub) => {
   const nextTimeframe = new Date();
-  // nextTimeframe.setHours(nextTimeframe.getHours() + 1);
+  nextTimeframe.setHours(nextTimeframe.getHours() + 1);
   const scheduleHour = nextTimeframe.getHours();
   const interval = sub.updateEveryMinutes;
   const associatedInstallation = await installation.get({

@@ -52,6 +52,11 @@ module.exports = {
         .then((records) => resolve(records))
         .catch((err) => reject(err));
     }),
+    getOne: (subId) => new Promise((resolve, reject) => {
+      Subscription.findOne({ subId })
+        .then((doc) => resolve(doc))
+        .catch((err) => reject(err));
+    }),
   },
   installation: {
     add: async (data) => {
@@ -81,6 +86,11 @@ module.exports = {
     }),
     delete: (_id) => new Promise((resolve, reject) => {
       Job.deleteOne({ _id })
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    }),
+    deleteAll: () => new Promise((resolve, reject) => {
+      Job.deleteMany({})
         .then(() => resolve())
         .catch((err) => reject(err));
     }),
