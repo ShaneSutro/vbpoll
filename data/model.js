@@ -64,13 +64,20 @@ module.exports = {
         .then(() => resolve())
         .catch((err) => reject(err));
     }),
+    getAll: () => new Promise((resolve, reject) => {
+      Job.find({})
+        .then((docs) => resolve(docs))
+        .catch((err) => reject(err));
+    }),
     delete: (_id) => new Promise((resolve, reject) => {
       Job.deleteOne({ _id })
         .then(() => resolve())
         .catch((err) => reject(err));
     }),
-    cleanOne: (subId) => new Promise((resolve, reject) => {
-
+    scrubSubscription: (subID) => new Promise((resolve, reject) => {
+      Job.deleteMany({ subID })
+        .then(() => resolve())
+        .catch((err) => reject(err));
     }),
   },
 };
