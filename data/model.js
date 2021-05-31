@@ -69,5 +69,8 @@ module.exports = {
         .then(() => resolve())
         .catch((err) => reject(err));
     }),
+    cleanOne: (subId) => new Promise((resolve, reject) => {
+
+    }),
   },
 };
