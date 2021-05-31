@@ -10,7 +10,7 @@ const convertAnswerLine = (option, answer, pct, isWinning) => {
   const rainbowLine = ['redBlock', 'orangeBlock', 'yellowBlock', 'greenBlock', 'blueBlock', 'violetBlock', 'redBlock', 'orangeBlock', 'yellowBlock', 'greenBlock', 'blueBlock', 'violetBlock', 'redBlock', 'orangeBlock', 'yellowBlock', 'greenBlock', 'blueBlock', 'violetBlock'];
   let line = `${option}) ${answer}`;
   const spacer = 22 - (pct.length + 1) - line.length;
-  for (let i = 0; i <= spacer; i++) {
+  for (let i = 0; i <= spacer; i += 1) {
     if (isWinning) {
       line += ` ${rainbowLine[i]}`;
     } else {

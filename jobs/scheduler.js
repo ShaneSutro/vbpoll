@@ -38,10 +38,9 @@ const schedule = async (sub) => {
   await connect(process.env.MONGO_DB_URI);
   const records = await subscription.getAll();
   let jobs = [];
-  for (const sub of records) {
+  await Promise.all(records.map(async (sub) => {
     jobs = jobs.concat(await schedule(sub));
-  }
-  console.log(jobs);
+  }));
   await job.addMany(jobs);
   disconnect();
 })();
