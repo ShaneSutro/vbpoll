@@ -5,14 +5,14 @@ const listen = () => 0;
 const bree = new Bree({
   jobs: [
     {
-      name: 'listener',
-      path: listen,
+      name: 'scheduler',
       interval: '60m',
+    },
+    {
+      name: 'run',
+      interval: '1m',
     },
   ],
 });
-console.log('listening...');
+console.log('Bree Starting Up');
 bree.start();
-
-module.exports = bree;
-console.log('exported');

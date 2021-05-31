@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-const { PollSchema, SubSchema, InstallationSchema } = require('./pollSchema');
+const { PollSchema, SubSchema, InstallationSchema, JobSchema } = require('./pollSchema');
 
 const Poll = mongoose.model('Poll', PollSchema);
 const Subscription = mongoose.model('Subscription', SubSchema);
 const Installation = mongoose.model('Installation', InstallationSchema);
+const Job = mongoose.model('Job', JobSchema);
 
 module.exports = {
   poll: {
@@ -54,6 +55,18 @@ module.exports = {
     get: async (search) => new Promise((resolve, reject) => {
       Installation.findOne(search)
         .then((record) => resolve(record))
+        .catch((err) => reject(err));
+    }),
+  },
+  job: {
+    addMany: (allJobs) => new Promise((resolve, reject) => {
+      Job.insertMany(allJobs)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    }),
+    delete: (_id) => new Promise((resolve, reject) => {
+      Job.deleteOne({ _id })
+        .then(() => resolve())
         .catch((err) => reject(err));
     }),
   },

@@ -40,8 +40,16 @@ const InstallationSchema = new mongoose.Schema({
   installableId: String,
 }, { timestamps: true });
 
+const JobSchema = new mongoose.Schema({
+  scheduledFor: Date,
+  subId: String,
+  apiKey: String,
+  apiSecret: String,
+});
+
 module.exports = {
   PollSchema,
   SubSchema,
   InstallationSchema,
+  JobSchema,
 };
