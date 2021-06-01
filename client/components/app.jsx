@@ -53,8 +53,9 @@ class App extends React.Component {
 
   componentDidMount() {
     let { pollID } = this.props.match.params;
-    const search = this.props.location.search;
+    const { search } = this.props.location;
     const subId = new URLSearchParams(search).get('subscription_id');
+    this.setState({ subId });
     this.getCurrentPoll(subId);
     if (!this.state.pollID) { this.regenerateId(); }
     if (pollID !== 'edit') { this.setState({ pollID }); }
@@ -69,9 +70,10 @@ class App extends React.Component {
   }
 
   async getCurrentPoll(subId) {
+    console.log('subId:', subId);
     fetch(`/polls/find/${subId}`)
       .then((initial) => {
-        if (initial.status === 204) {
+        if (initial.status !== 204) {
           this.setState({ subId });
         }
         return initial;
