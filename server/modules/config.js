@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { subscription, installation } = require('../../data/model');
+const reset = require('../../jobs/reset');
 
 const router = Router();
 
@@ -11,6 +12,7 @@ const saveInstallation = (data) => new Promise((resolve, reject) => {
 
 const saveSubscription = (data) => new Promise((resolve, reject) => {
   subscription.add(data)
+    .then(() => reset.singleReset(data.subId))
     .then(() => resolve())
     .catch((err) => reject(err));
 });
@@ -31,7 +33,7 @@ router.post('/', async (req, res) => {
   } else if (requestType === 'SubscriptionCreated') {
     const saveToDb = {
       subId: req.body.subscription.id,
-      updateEveryMinutes: 1,
+      updateEveryMinutes: 5,
       installationId: req.body.subscription.installation.id,
       activePoll: 'none',
       previousPolls: [],

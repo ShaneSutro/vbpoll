@@ -13,9 +13,9 @@ const Job = mongoose.model('Job', JobSchema);
 
 module.exports = {
   poll: {
-    create: async (poll) => {
+    create: async (pollID, poll) => {
       await Poll.findOneAndUpdate(
-        { pollID: poll.pollID },
+        { pollID },
         poll,
         { upsert: true, new: true, runValidators: true },
       );
@@ -34,9 +34,13 @@ module.exports = {
       const pollData = await Poll.findOne({ pollID });
       console.log(user, pollData);
     }),
-    edit: (pollID, data) => new Promise(async (resolve, reject) => {
-      // TODO: implement route
-    }),
+    edit: async (pollID, poll) => {
+      await Poll.findOneAndUpdate(
+        { pollID },
+        { poll },
+        { upsert: true, new: true, runValidators: true },
+      );
+    },
   },
   subscription: {
     add: async (data) => {

@@ -10,9 +10,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       user: '',
+      modalOpen: false,
       userHasVoted: false,
       userVotedFor: '',
-      pollID: 'abc123',
+      pollID: '',
+      subId: '',
       updating: false,
       newPoll: true,
       previouslySaved: {
@@ -27,14 +29,14 @@ class App extends React.Component {
       },
       poll: {
         allowUnlimitedVotes: '0',
-        isOpen: true,
-        question: 'Where should we go for lunch today?',
-        a: 'Modern Market',
-        b: 'Chipotle',
-        c: 'Sushi Den',
-        openAsOf: '2021-05-27T00:00',
-        openUntil: '2021-05-30T12:45',
-        frequency: '1',
+        isOpen: false,
+        question: '',
+        a: '',
+        b: '',
+        c: '',
+        openAsOf: '',
+        openUntil: '',
+        frequency: '2',
       },
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
@@ -44,9 +46,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.regenerateId();
     let { pollID } = this.props.match.params;
-    if (pollID !== 'config') { this.setState({ pollID }); }
+    const search = this.props.location.search;
+    const subId = new URLSearchParams(search).get('subscription_id');
+    this.getCurrentPoll(subId);
+    if (!this.state.pollID) { this.regenerateId(); }
+    if (pollID !== 'edit') { this.setState({ pollID }); }
+    console.log('Set New Poll ID');
     this.getVoteStatus();
     const today = new Date();
     const nextWeek = new Date(today);
@@ -56,8 +62,30 @@ class App extends React.Component {
     this.setState({ poll: pollData });
   }
 
+  async getCurrentPoll(subId) {
+    fetch(`/polls/find/${subId}`)
+      .then((initial) => {
+        if (initial.status === 204) {
+          this.setState({ subId });
+        }
+        return initial;
+      })
+      .then((response) => response.json())
+      .then((poll) => {
+        console.log('Sub Id: ', subId);
+        this.setState({
+          poll: poll.poll,
+          previouslySaved: poll.poll,
+          pollID: poll.pollID,
+          subId,
+        });
+      })
+      .catch((err) => console.error(err));
+  }
+
   async getVoteStatus() {
     const { pollID } = this.state;
+    console.log(pollID);
     let ip;
     let userHasVoted;
     let userVotedFor;
@@ -80,8 +108,22 @@ class App extends React.Component {
   }
 
   savePoll() {
+    let { poll, pollID, subId } = this.state;
+    const newPoll = { ...sharedFunctions.pollTemplate };
+    if (!poll.isOpen) {
+      newPoll.poll = { ...poll };
+      newPoll.pollID = pollID;
+      newPoll.subId = subId;
+    }
+    console.log(poll);
     console.log('Saving poll information');
-    console.log(this.state.poll);
+    fetch('/polls/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pollID, poll: newPoll }),
+    })
+      .then(() => console.log('saved'))
+      .catch((err) => console.error(err));
   }
 
   regenerateId() {
@@ -118,11 +160,11 @@ class App extends React.Component {
   }
 
   render() {
-    const { mode, poll } = this.state;
+    const { poll } = this.state;
     return (
       <Router>
         <Switch>
-          <Route exact path="/config">
+          <Route exact path="/edit">
             <PollSetup actions={{ onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
           </Route>
           <Route path="/:id">
