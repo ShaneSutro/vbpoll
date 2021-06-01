@@ -84,13 +84,13 @@ const fullReset = async () => {
 };
 
 const singleReset = async (subId) => {
-  await connect(process.env.MONGO_DB_URI);
+  // await connect(process.env.MONGO_DB_URI);
   await eraseSubscriptionJobs(subId);
   const sub = await subscription.getOne(subId);
   let jobs = [];
   jobs = jobs.concat(await buildCurrentHour(sub)).concat(await buildNextHour(sub));
   await job.addMany(jobs);
-  await disconnect();
+  // await disconnect();
 };
 
 module.exports = {

@@ -24,7 +24,7 @@ const PollSetup = (props) => {
     <div className="main">
       <VB.Title>VB Polls</VB.Title>
       <VB.SubTitle2>Set up a poll below and vote at <i>https://vbpoll.app/{pollID}</i></VB.SubTitle2>
-      <VB.Medium>Note: To save space, the question is only visible on the voting page</VB.Medium>
+      <VB.Medium>Note: To save space, the question is only visible on the voting page. Use caution when editing - votes carry across edits, so only edit for typos. If you need to start over, use the reset button below.</VB.Medium>
       {poll.isOpen
         ? <div className="poll-open"><VB.Body><VB.Icon color="white" type="check" /> This poll is open!</VB.Body></div>
         : <div className="poll-closed"><VB.Body><VB.Icon color="white" type="close" /> No Active Poll</VB.Body></div>}

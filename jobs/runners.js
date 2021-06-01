@@ -1,6 +1,7 @@
 const { Vesta } = require('vestaboard-api');
 const fetch = require('node-fetch');
 const { poll } = require('../data/model');
+const moment = require('moment');
 
 const vesta = new Vesta('', '');
 
@@ -32,7 +33,7 @@ const calculatePercentages = (votes) => {
       pct: '0',
       isWinning: false,
     };
-    percentages.b = {
+    percentages.c = {
       pct: '0',
       isWinning: false,
     };
@@ -75,27 +76,32 @@ const sendMessage = (creds, characters) => {
 module.exports = {
   '3100becb-84b3-42b9-ba31': async (data) => {
     const pollInfo = await poll.getBySub(data.subId);
+    let pollClosed = false;
+    if (!pollInfo.poll.isOpen || new Date() > moment(pollInfo.poll.openUntil).toDate()) {
+      console.log('Poll is closed or expired');
+      pollClosed = true;
+    }
     const messageArray = [
       // Title line
       [
         65, 65, 65, 65, 65, 65, 65, 0, 0, 16, 15, 12, 12, 0, 0, 65, 65, 65, 65, 65, 65, 65,
       ],
     ];
-    if (pollInfo.poll.isOpen) {
-      messageArray.push(convertLine(`  vbpoll.com/${pollInfo.pollID}  `));
-      if (pollInfo.voteCounts.totalVotes === 1) {
-        messageArray.push(convertLine('        1 vote        '));
-      } else {
-        messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
-      }
-      const percentages = calculatePercentages(pollInfo.voteCounts);
-      messageArray.push(convertAnswerLine('A', pollInfo.poll.a, `${percentages.a.pct}%`, percentages.a.isWinning));
-      messageArray.push(convertAnswerLine('B', pollInfo.poll.b, `${percentages.b.pct}%`, percentages.b.isWinning));
-      if (pollInfo.poll.c !== '') {
-        messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
-      } else {
-        messageArray.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-      }
+    messageArray.push(convertLine(`  vbpoll.com/${pollInfo.pollID}  `));
+    if (pollInfo.voteCounts.totalVotes === 1) {
+      messageArray.push(convertLine('        1 vote        '));
+    } else if (pollClosed) {
+      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} votes  `));
+    } else {
+      messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
+    }
+    const percentages = calculatePercentages(pollInfo.voteCounts);
+    messageArray.push(convertAnswerLine('A', pollInfo.poll.a, `${percentages.a.pct}%`, percentages.a.isWinning));
+    messageArray.push(convertAnswerLine('B', pollInfo.poll.b, `${percentages.b.pct}%`, percentages.b.isWinning));
+    if (pollInfo.poll.c !== '') {
+      messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
+    } else {
+      messageArray.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
     sendMessage({
       subId: data.subId,

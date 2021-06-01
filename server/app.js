@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const db = require('../data/model');
 const polls = require('./modules/polls');
+const vote = require('./modules/vote');
 const subscriptions = require('./modules/subscriptions');
 const config = require('./modules/config');
 
@@ -20,6 +21,7 @@ app.get('/edit', (req, res) => {
 app.use('/config', config);
 app.use('/polls', polls);
 app.use('/subscriptions', subscriptions);
+app.use('/vote', vote);
 
 app.get('/:poll', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));

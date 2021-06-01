@@ -13,10 +13,10 @@ const Job = mongoose.model('Job', JobSchema);
 
 module.exports = {
   poll: {
-    create: async (pollID, poll) => {
+    create: async (pollID, metadata, poll) => {
       await Poll.findOneAndUpdate(
         { pollID },
-        poll,
+        { ...metadata, poll },
         { upsert: true, new: true, runValidators: true },
       );
     },
@@ -32,7 +32,10 @@ module.exports = {
     }),
     vote: (pollID, user) => new Promise(async (resolve, reject) => {
       const pollData = await Poll.findOne({ pollID });
-      console.log(user, pollData);
+      const { votes } = pollData;
+      votes.push(user);
+      console.log(user);
+      await Poll.findOneAndUpdate({ pollID }, { votes });
     }),
     edit: async (pollID, poll) => {
       await Poll.findOneAndUpdate(
@@ -61,6 +64,12 @@ module.exports = {
         .then((doc) => resolve(doc))
         .catch((err) => reject(err));
     }),
+    update: async (subId, frequency) => {
+      await Subscription.findOneAndUpdate(
+        { subId },
+        { updateEveryMinutes: frequency },
+      );
+    },
   },
   installation: {
     add: async (data) => {
@@ -98,8 +107,8 @@ module.exports = {
         .then(() => resolve())
         .catch((err) => reject(err));
     }),
-    scrubSubscription: (subID) => new Promise((resolve, reject) => {
-      Job.deleteMany({ subID })
+    scrubSubscription: (subId) => new Promise((resolve, reject) => {
+      Job.deleteMany({ subId })
         .then(() => resolve())
         .catch((err) => reject(err));
     }),

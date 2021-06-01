@@ -1,17 +1,45 @@
 const { Router } = require('express');
-const { poll } = require('../../data/model');
+const { poll, subscription } = require('../../data/model');
+const { singleReset } = require('../../jobs/reset');
 
 const router = Router();
 
+const frequencyMap = {
+  1: 1,
+  2: 5,
+  3: 10,
+  4: 15,
+  5: 20,
+  6: 30,
+  7: 60,
+};
+
 router.post('/save', (req, res) => {
-  console.log(`At /polls/save route with id ${req.params.id}`);
   console.log(req.body);
   if (req.body !== {}) {
-    const pollID = req.body.pollID;
-    const pollInformation = req.body.poll;
-    poll.create(pollID, pollInformation)
+    const { pollID, metadata, pollData } = req.body;
+    // const pollID = req.body.pollID;
+    // const pollInformation = req.body.poll;
+    poll.create(pollID, metadata, pollData)
       .then(() => res.sendStatus(201))
       .catch((err) => res.status(500).send(err));
+  }
+});
+
+router.put('/frequency/update', async (req, res) => {
+  const { newFrequency, subId } = req.body;
+  await subscription.update(subId, frequencyMap[newFrequency]);
+  await singleReset(subId);
+  res.sendStatus(203);
+});
+
+router.get('/find/poll/:pollID', async (req, res) => {
+  const existingPoll = await poll.getById(req.params.pollID);
+  console.log('Found by id:', existingPoll);
+  if (!existingPoll) {
+    res.sendStatus(204);
+  } else {
+    res.status(200).send(existingPoll);
   }
 });
 
@@ -23,5 +51,6 @@ router.get('/find/:subscription', async (req, res) => {
     res.status(200).send(existingPoll);
   }
 });
+
 
 module.exports = router;
