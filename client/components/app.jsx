@@ -38,6 +38,12 @@ class App extends React.Component {
         openUntil: '',
         frequency: '2',
       },
+      errors: {
+        question: '',
+        a: '',
+        b: '',
+        c: '',
+      },
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
     this.savePoll = this.savePoll.bind(this);
@@ -109,9 +115,24 @@ class App extends React.Component {
 
   savePoll() {
     let { poll, pollID, subId } = this.state;
+    let didError = false;
+    ['question', 'a', 'b'].forEach((name) => {
+      if (poll[name] === '') {
+        didError = true;
+        const { errors } = this.state;
+        errors[name] = 'This field is required.';
+        this.setState({ errors });
+      } else {
+        const { errors } = this.state;
+        errors[name] = '';
+        this.setState({ errors });
+      }
+    });
+    if (didError) { return; }
     const newPoll = { ...sharedFunctions.pollTemplate };
     if (!poll.isOpen) {
       newPoll.poll = { ...poll };
+      newPoll.poll.isOpen = true;
       newPoll.pollID = pollID;
       newPoll.subId = subId;
     }
@@ -123,6 +144,7 @@ class App extends React.Component {
       body: JSON.stringify({ pollID, poll: newPoll }),
     })
       .then(() => console.log('saved'))
+      .then(() => this.componentDidMount())
       .catch((err) => console.error(err));
   }
 
@@ -152,6 +174,17 @@ class App extends React.Component {
   }
 
   inputFieldChange(val, inputName) {
+    ['a', 'b', 'c'].forEach((name) => {
+      if (inputName === name && val.length > 14) {
+        const { errors } = this.state;
+        errors[name] = 'Too many characters for this line!';
+        this.setState({ errors });
+      } else if (val.length <= 14) {
+        const { errors } = this.state;
+        errors[name] = '';
+        this.setState({ errors });
+      }
+    });
     const newPollState = { ...this.state.poll };
     const previousPollSet = { ...this.state.previouslySaved };
     newPollState[inputName] = val;

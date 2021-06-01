@@ -23,6 +23,21 @@ const convertAnswerLine = (option, answer, pct, isWinning) => {
 
 const calculatePercentages = (votes) => {
   const percentages = {};
+  if (votes.totalVotes === 0) {
+    percentages.a = {
+      pct: '0',
+      isWinning: false,
+    };
+    percentages.b = {
+      pct: '0',
+      isWinning: false,
+    };
+    percentages.b = {
+      pct: '0',
+      isWinning: false,
+    };
+    return percentages;
+  }
   percentages.a = {
     pct: Math.floor(Math.round((votes.a / votes.totalVotes) * 100)),
     isWinning: false,
@@ -76,7 +91,11 @@ module.exports = {
       const percentages = calculatePercentages(pollInfo.voteCounts);
       messageArray.push(convertAnswerLine('A', pollInfo.poll.a, `${percentages.a.pct}%`, percentages.a.isWinning));
       messageArray.push(convertAnswerLine('B', pollInfo.poll.b, `${percentages.b.pct}%`, percentages.b.isWinning));
-      messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
+      if (pollInfo.poll.c !== '') {
+        messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
+      } else {
+        messageArray.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      }
     }
     sendMessage({
       subId: data.subId,

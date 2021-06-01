@@ -16,7 +16,8 @@ const PollSetup = (props) => {
     poll,
     updating,
     newPoll,
-    pollID 
+    pollID,
+    errors,
   } = props.state;
   const { onChange, save } = props.actions;
   return (
@@ -28,10 +29,10 @@ const PollSetup = (props) => {
         ? <div className="poll-open"><VB.Body><VB.Icon color="white" type="check" /> This poll is open!</VB.Body></div>
         : <div className="poll-closed"><VB.Body><VB.Icon color="white" type="close" /> No Active Poll</VB.Body></div>}
       <div className="poll-setup">
-        <VB.Input label="Poll Question" multiline onValueChange={(val) => onChange(val, 'question')} value={poll.question} />
-        <VB.Input label="Option 1" error="" onValueChange={(val) => onChange(val, 'a')} value={poll.a} />
-        <VB.Input label="Option 2" error="" onValueChange={(val) => onChange(val, 'b')} value={poll.b} />
-        <VB.Input label="Option 3" error="" onValueChange={(val) => onChange(val, 'c')} value={poll.c} />
+        <VB.Input label="Poll Question" error={errors.question} multiline onValueChange={(val) => onChange(val, 'question')} value={poll.question} />
+        <VB.Input label="Option 1" error={errors.a} onValueChange={(val) => onChange(val, 'a')} value={poll.a} />
+        <VB.Input label="Option 2" error={errors.b} onValueChange={(val) => onChange(val, 'b')} value={poll.b} />
+        <VB.Input label="Option 3" error={errors.c} onValueChange={(val) => onChange(val, 'c')} value={poll.c} />
         <VB.Input label="Poll Open Until" type="datetime-local" onValueChange={(val) => onChange(val, 'openUntil')} value={poll.openUntil} />
         <VB.Select onValueChange={(val) => onChange(val, 'frequency')} value={poll.frequency} label="Update Vestaboard How Often?" options={frequencyOptions} />
       </div>

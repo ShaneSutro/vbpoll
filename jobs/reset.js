@@ -97,3 +97,5 @@ module.exports = {
   fullReset,
   singleReset,
 };
+
+fullReset();

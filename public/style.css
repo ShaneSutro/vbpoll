@@ -39,6 +39,10 @@ h1 {
   margin-bottom: 15px;
 }
 
+.poll-setup p {
+  margin-bottom: 10px;
+}
+
 .poll-setup {
   margin-bottom: -10px;
 }
