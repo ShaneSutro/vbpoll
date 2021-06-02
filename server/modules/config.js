@@ -18,6 +18,7 @@ const saveSubscription = (data) => new Promise((resolve, reject) => {
 });
 
 router.post('/', async (req, res) => {
+  console.log('Config request type:', req.body.type);
   const requestType = req.body.type;
   if (!requestType) { res.sendStatus(400); }
   if (requestType === 'InstallationCreated') {
