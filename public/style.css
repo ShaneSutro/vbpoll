@@ -66,7 +66,8 @@ h1 {
 /* VOTE */
 .vote {
   margin-top: 10px;
-  height: 98vh;
+  height: 97vh;
+  min-height: 100vh;
   display: grid;
   grid-template-rows: 1fr 10fr 1fr;
   justify-content: center;

@@ -62,7 +62,7 @@ const calculatePercentages = (votes) => {
 };
 
 const sendMessage = (creds, characters) => {
-  console.log('Sending...');
+  console.log(`Sending to ${creds.subId}`);
   fetch(`https://platform.vestaboard.com/subscriptions/${creds.subId}/message`, {
     method: 'POST',
     headers: {
@@ -89,7 +89,6 @@ module.exports = {
       ],
     ];
     messageArray.push(convertLine(`  vbpoll.app/${pollInfo.pollID}  `));
-    console.log(pollClosed);
     if (pollInfo.voteCounts.totalVotes === 1 && !pollClosed) {
       messageArray.push(convertLine('        1 vote        '));
     } else if (pollClosed) {
