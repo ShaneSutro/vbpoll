@@ -9,5 +9,5 @@ if (process.env.NODE_ENV !== 'production') {
 connect(process.env.MONGO_DB_URI)
   .then(() => {
     console.log('👍 Server');
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   });
