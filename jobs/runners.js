@@ -75,7 +75,7 @@ const sendMessage = (creds, characters) => {
 };
 
 module.exports = {
-  '3100becb-84b3-42b9-ba31': async (data) => {
+  'c5d472aa-260d-4e7e-84ab-f069a3c83729': async (data) => {
     const pollInfo = await poll.getBySub(data.subId);
     let pollClosed = false;
     if (!pollInfo.poll.isOpen || new Date() > moment(pollInfo.poll.openUntil).toDate()) {
