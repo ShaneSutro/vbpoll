@@ -92,14 +92,14 @@ const PollSetup = (props) => {
         />
       </div>
       <div className="actions">
-        <VB.RadioButtons
+        {/* <VB.RadioButtons
           options={[
             { id: '0', name: 'Allow 1 Vote Per IP Address' },
             { id: '1', name: 'Allow Unlimited Votes' },
           ]}
           onValueChange={(val) => onChange(val, 'allowUnlimitedVotes')}
           value={poll.allowUnlimitedVotes}
-        />
+        /> */}
         <VB.Button onClick={save} buttonType="primary">
           {updating && !newPoll ? 'Update' : 'Save'}
         </VB.Button>
@@ -125,9 +125,12 @@ const PollSetup = (props) => {
           <VB.Button onClick={resetVotes} buttonType="danger">
             Reset Vote Counts
           </VB.Button>
-          <VB.Button onClick={deletePoll} buttonType="danger">
-            Delete Poll
-          </VB.Button>
+          {poll.isOpen ? null
+            : (
+              <VB.Button onClick={deletePoll} buttonType="danger">
+                Delete Poll
+              </VB.Button>
+            )}
         </div>
         <VB.Medium>
           Problems? Send me an email or find me on Twitter at @shanesutro

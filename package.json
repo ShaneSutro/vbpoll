@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "start": "node server/index.js",
     "backend": "nodemon server/index.js",
     "build": "webpack",
     "build-dev": "webpack serve --open"

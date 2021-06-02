@@ -24,14 +24,14 @@ class App extends React.Component {
       updating: false,
       newPoll: true,
       previouslySaved: {
-        allowUnlimitedVotes: '1',
+        allowUnlimitedVotes: '0',
         isOpen: true,
         question: '',
         a: '',
         b: '',
         c: '',
-        openUntil: '2021-05-27T12:45',
-        frequency: '1',
+        openUntil: '',
+        frequency: '0',
       },
       poll: {
         allowUnlimitedVotes: '0',
@@ -260,6 +260,7 @@ class App extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pollID, subId }),
     })
+      .then((response) => console.log('response:', response))
       .then(() => this.showToast('Poll deleted', 'success'))
       .then(() => this.componentDidMount())
       .catch(() => this.showToast('Error deleting poll', 'error'));

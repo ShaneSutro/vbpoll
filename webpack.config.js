@@ -5,13 +5,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   entry: './client/index.jsx',
   target: 'web',
-  mode: 'development',
-  devServer: {
-    historyApiFallback: true,
-    proxy: {
-      '**': 'http://localhost:3000',
-    },
-  },
+  mode: 'production',
+  // devServer: {
+  //   historyApiFallback: true,
+  //   proxy: {
+  //     '**': 'http://localhost:3000',
+  //   },
+  // },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
