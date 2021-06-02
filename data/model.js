@@ -84,7 +84,12 @@ module.exports = {
         document,
       )
         .then(() => resolve())
-        .catch(() => reject(err));
+        .catch((err) => reject(err));
+    }),
+    deletePoll: async (pollID) => new Promise((resolve, reject) => {
+      Poll.deleteOne({ pollID })
+        .then(() => resolve())
+        .catch((err) => reject(err));
     }),
   },
   subscription: {

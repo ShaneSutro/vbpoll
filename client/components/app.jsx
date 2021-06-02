@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  withRouter,
+} from 'react-router-dom';
 import * as VB from '@vestaboard/installables';
 import moment from 'moment';
 import PollSetup from './pollSetup';
@@ -59,20 +64,23 @@ class App extends React.Component {
     this.closeToast = this.closeToast.bind(this);
     this.showToast = this.showToast.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
+    this.deletePoll = this.deletePoll.bind(this);
   }
 
   componentDidMount() {
-    let { pollID } = this.props.match.params;
+    const { pollID } = this.props.match.params;
     const { search } = this.props.location;
     const subId = new URLSearchParams(search).get('subscription_id');
     this.setState({ subId });
     this.getCurrentPoll(subId, pollID);
-    if (!this.state.pollID && pollID === 'edit') { this.regenerateId(); }
+    if (!this.state.pollID && pollID === 'edit') {
+      this.regenerateId();
+    }
     this.getVoteStatus(pollID);
     const today = new Date();
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
-    const pollData = { ...this.state.poll }; // TODO: This should come from the database eventually
+    const pollData = { ...this.state.poll };
     pollData.openUntil = `${moment(nextWeek).format('YYYY-MM-DD')}T23:59`;
     this.setState({ poll: pollData });
   }
@@ -122,13 +130,15 @@ class App extends React.Component {
         userVotedFor = data.votedForOption;
         this.setState({ userHasVoted, userVotedFor });
         if (this.state.poll.allowUnlimitedVotes === '0') {
-          document.getElementsByClassName(`answer-${userVotedFor}`)[0].classList.add('chosen');
+          document
+            .getElementsByClassName(`answer-${userVotedFor}`)[0]
+            .classList.add('chosen');
         }
       });
   }
 
   savePoll() {
-    let { poll, pollID, subId } = this.state;
+    const { poll, pollID, subId } = this.state;
     let didError = false;
     ['question', 'a', 'b'].forEach((name) => {
       if (poll[name] === '') {
@@ -142,7 +152,9 @@ class App extends React.Component {
         this.setState({ errors });
       }
     });
-    if (didError) { return; }
+    if (didError) {
+      return;
+    }
     let metadata;
     if (poll.isOpen) {
       metadata = {};
@@ -151,9 +163,8 @@ class App extends React.Component {
       poll.isOpen = true;
       metadata.pollID = pollID;
       metadata.subId = subId;
+      this.updatePollFrequency();
     }
-    console.log(poll);
-    console.log('Saving poll information');
     fetch('/polls/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -175,8 +186,7 @@ class App extends React.Component {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ subId, newFrequency: poll.frequency }),
-    })
-      .then(() => console.log('Updated frequency'));
+    }).then(() => console.log('Updated frequency'));
   }
 
   regenerateId() {
@@ -185,7 +195,7 @@ class App extends React.Component {
   }
 
   saveVote(option) {
-    let { pollID, user } = this.state;
+    const { pollID, user } = this.state;
     fetch(`/vote/${pollID}/${user}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -194,10 +204,12 @@ class App extends React.Component {
       .then((res) => {
         if (res.status === 201) {
           const allAnswerButtons = document.getElementsByClassName('answer');
-          for (let button of allAnswerButtons) {
+          for (const button of allAnswerButtons) {
             button.classList.remove('chosen');
           }
-          const votedForButton = document.getElementsByClassName(`answer-${option}`)[0];
+          const votedForButton = document.getElementsByClassName(
+            `answer-${option}`,
+          )[0];
           votedForButton.classList.add('chosen');
           this.showToast('Vote saved!', 'successs');
         }
@@ -235,12 +247,22 @@ class App extends React.Component {
     })
       .then(() => {
         this.showToast('Votes reset!', 'success');
-        // this.setState({ toast: { message: 'Votes reset!', severity: 'success', visible: true } });
       })
-      .catch((err) => {
+      .catch(() => {
         this.showToast('Error resetting votes!', 'error');
-        // this.setState({ toast: { message: 'Error resetting votes!', severity: 'error', visible: true } });
       });
+  }
+
+  deletePoll() {
+    const { pollID, subId } = this.state;
+    fetch('/polls/delete', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pollID, subId }),
+    })
+      .then(() => this.showToast('Poll deleted', 'success'))
+      .then(() => this.componentDidMount())
+      .catch(() => this.showToast('Error deleting poll', 'error'));
   }
 
   updateStatus() {
@@ -251,10 +273,13 @@ class App extends React.Component {
       body: JSON.stringify({ pollID, status: !poll.isOpen }),
     })
       .then(() => {
-        this.showToast(`Poll is now ${!poll.isOpen ? 'open' : 'closed'}`, 'success')
+        this.showToast(
+          `Poll is now ${!poll.isOpen ? 'open' : 'closed'}`,
+          'success',
+        );
         this.componentDidMount();
       })
-      .catch((err) => this.showToast('Error saving poll status!', 'error'));
+      .catch(() => this.showToast('Error saving poll status!', 'error'));
   }
 
   showToast(message, severity) {
@@ -273,12 +298,34 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route exact path="/edit">
-            <VB.Toast severity={toast.severity} message={toast.message} open={toast.visible} onClose={this.closeToast} />
-            <PollSetup actions={{ updateStatus: this. updateStatus, resetVotes: this.resetVotes, onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
+            <VB.Toast
+              severity={toast.severity}
+              message={toast.message}
+              open={toast.visible}
+              onClose={this.closeToast}
+            />
+            <PollSetup
+              actions={{
+                updateStatus: this.updateStatus,
+                resetVotes: this.resetVotes,
+                onChange: this.inputFieldChange,
+                save: this.savePoll,
+                deletePoll: this.deletePoll,
+              }}
+              state={{ ...this.state }}
+            />
           </Route>
           <Route path="/:id">
-            <VB.Toast severity={toast.severity} message={toast.message} open={toast.visible} onClose={this.closeToast} />
-            <Vote actions={{ showToast: this.showToast, saveVote: this.saveVote }} poll={poll} />
+            <VB.Toast
+              severity={toast.severity}
+              message={toast.message}
+              open={toast.visible}
+              onClose={this.closeToast}
+            />
+            <Vote
+              actions={{ showToast: this.showToast, saveVote: this.saveVote }}
+              poll={poll}
+            />
           </Route>
         </Switch>
       </Router>

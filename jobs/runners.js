@@ -70,7 +70,8 @@ const sendMessage = (creds, characters) => {
       'X-Vestaboard-Api-Secret': creds.apiSecret,
     },
     body: JSON.stringify({ characters }),
-  });
+  })
+    .then((response) => console.log(response.status));
 };
 
 module.exports = {
@@ -88,10 +89,12 @@ module.exports = {
       ],
     ];
     messageArray.push(convertLine(`  vbpoll.com/${pollInfo.pollID}  `));
-    if (pollInfo.voteCounts.totalVotes === 1) {
+    console.log(pollClosed);
+    if (pollInfo.voteCounts.totalVotes === 1 && !pollClosed) {
       messageArray.push(convertLine('        1 vote        '));
     } else if (pollClosed) {
-      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} votes  `));
+      console.log('Poll is closed');
+      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} vote${pollInfo.voteCounts.totalVotes > 1 ? 's' : ' '}  `));
     } else {
       messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
     }

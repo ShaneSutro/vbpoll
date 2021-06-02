@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { poll, subscription } = require('../../data/model');
-const { singleReset } = require('../../jobs/reset');
+const { singleReset, singleDelete } = require('../../jobs/reset');
 
 const router = Router();
 
@@ -15,13 +15,19 @@ const frequencyMap = {
 };
 
 router.post('/save', (req, res) => {
-  console.log(req.body);
   if (req.body !== {}) {
     const { pollID, metadata, pollData } = req.body;
     poll.create(pollID, metadata, pollData)
       .then(() => res.sendStatus(201))
       .catch((err) => res.status(500).send(err));
   }
+});
+
+router.delete('/delete', (req, res) => {
+  poll.deletePoll(req.body.pollID)
+    .then(() => singleDelete(req.body.subId))
+    .then(() => res.sendStatus(202))
+    .catch((err) => res.status(500).send(err));
 });
 
 router.put('/frequency/update', async (req, res) => {
@@ -33,7 +39,6 @@ router.put('/frequency/update', async (req, res) => {
 
 router.get('/find/poll/:pollID', async (req, res) => {
   const existingPoll = await poll.getById(req.params.pollID);
-  console.log('Found by id:', existingPoll);
   if (!existingPoll) {
     res.sendStatus(204);
   } else {

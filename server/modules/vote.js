@@ -18,14 +18,18 @@ router.post('/:id/:ip', (req, res) => {
 router.get('/verify/:id/:ip', async (req, res) => {
   const { id, ip } = req.params;
   const doc = await poll.getById(id);
-  const voted = { voted: false };
-  for (let i = 0; i < doc.votes.length; i++) {
-    if (doc.votes[i].ip === ip) {
-      voted.voted = true;
-      voted.votedForOption = doc.votes[i].option;
+  if (!id || !ip || !doc) {
+    res.sendStatus(301);
+  } else {
+    const voted = { voted: false };
+    for (let i = 0; i < doc.votes.length; i++) {
+      if (doc.votes[i].ip === ip) {
+        voted.voted = true;
+        voted.votedForOption = doc.votes[i].option;
+      }
     }
+    res.status(200).send(voted);
   }
-  res.status(200).send(voted);
 });
 
 module.exports = router;

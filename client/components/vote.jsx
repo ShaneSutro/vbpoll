@@ -61,8 +61,8 @@ const Vote = ({ poll, actions }) => {
                       {poll.c}
                     </V.Button>
                   ) : null}
-                  <V.Title>This poll is closed!</V.Title>
                 </div>
+                <V.Title>This poll is closed!</V.Title>
               </div>
             </div>
           )

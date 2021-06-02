@@ -84,6 +84,7 @@ const fullReset = async () => {
 };
 
 const singleReset = async (subId) => {
+  console.log('Performing single reset');
   // await connect(process.env.MONGO_DB_URI);
   await eraseSubscriptionJobs(subId);
   const sub = await subscription.getOne(subId);
@@ -93,7 +94,13 @@ const singleReset = async (subId) => {
   // await disconnect();
 };
 
+const singleDelete = async (subId) => {
+  console.log('Deleting all jobs for this subscription');
+  await eraseSubscriptionJobs(subId);
+};
+
 module.exports = {
   fullReset,
   singleReset,
+  singleDelete,
 };
