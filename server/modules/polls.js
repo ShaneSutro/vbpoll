@@ -18,8 +18,6 @@ router.post('/save', (req, res) => {
   console.log(req.body);
   if (req.body !== {}) {
     const { pollID, metadata, pollData } = req.body;
-    // const pollID = req.body.pollID;
-    // const pollInformation = req.body.poll;
     poll.create(pollID, metadata, pollData)
       .then(() => res.sendStatus(201))
       .catch((err) => res.status(500).send(err));

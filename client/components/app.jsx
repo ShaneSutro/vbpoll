@@ -105,7 +105,7 @@ class App extends React.Component {
         ip = data.ip;
         this.setState({ user: ip });
       });
-    fetch(`/verify/${pollID}/${ip}`)
+    fetch(`/vote/verify/${pollID}/${ip}`)
       .then((res) => res.json())
       .then((data) => {
         userHasVoted = data.voted;

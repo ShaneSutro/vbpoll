@@ -9,4 +9,17 @@ router.post('/:id/:ip', (req, res) => {
   res.sendStatus(201);
 });
 
+router.get('/verify/:id/:ip', async (req, res) => {
+  const { id, ip } = req.params;
+  const doc = await poll.getById(id);
+  const voted = { voted: false };
+  for (let i = 0; i < doc.votes.length; i++) {
+    if (doc.votes[i].ip === ip) {
+      voted.voted = true;
+      voted.votedForOption = doc.votes[i].option;
+    }
+  }
+  res.status(200).send(voted);
+});
+
 module.exports = router;

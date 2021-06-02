@@ -32,10 +32,26 @@ module.exports = {
     }),
     vote: (pollID, user) => new Promise(async (resolve, reject) => {
       const pollData = await Poll.findOne({ pollID });
-      const { votes } = pollData;
-      votes.push(user);
-      console.log(user);
-      await Poll.findOneAndUpdate({ pollID }, { votes });
+      const { votes, voteCounts } = pollData;
+      let alreadyVoted = false;
+      let voteIndex = 0;
+      for (let i = 0; i < votes.length; i++) {
+        if (votes[i].ip === user.ip) {
+          alreadyVoted = true;
+          voteIndex = i;
+          break;
+        }
+      }
+      if (!alreadyVoted) {
+        votes.push(user);
+        voteCounts.totalVotes += 1;
+        voteCounts[user.option] += 1;
+      } else {
+        voteCounts[votes[voteIndex].option] -= 1;
+        votes[voteIndex].option = user.option;
+        voteCounts[user.option] += 1;
+      }
+      await Poll.findOneAndUpdate({ pollID }, { votes, voteCounts });
     }),
     edit: async (pollID, poll) => {
       await Poll.findOneAndUpdate(

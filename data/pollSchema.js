@@ -22,7 +22,7 @@ const PollSchema = new mongoose.Schema({
   },
   votes: [{
     ip: String,
-    votedFor: String,
+    option: String,
   }],
 }, { timestamps: true });
 
