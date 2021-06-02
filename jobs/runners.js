@@ -76,39 +76,44 @@ const sendMessage = (creds, characters) => {
 
 module.exports = {
   'c5d472aa-260d-4e7e-84ab-f069a3c83729': async (data) => {
-    const pollInfo = await poll.getBySub(data.subId);
-    let pollClosed = false;
-    if (!pollInfo.poll.isOpen || new Date() > moment(pollInfo.poll.openUntil).toDate()) {
-      console.log('Poll is closed or expired');
-      pollClosed = true;
-    }
-    const messageArray = [
-      // Title line
-      [
-        65, 65, 65, 65, 65, 65, 65, 0, 0, 16, 15, 12, 12, 0, 0, 65, 65, 65, 65, 65, 65, 65,
-      ],
-    ];
-    messageArray.push(convertLine(`  vbpoll.app/${pollInfo.pollID}  `));
-    if (pollInfo.voteCounts.totalVotes === 1 && !pollClosed) {
-      messageArray.push(convertLine('        1 vote        '));
-    } else if (pollClosed) {
-      console.log('Poll is closed');
-      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} vote${pollInfo.voteCounts.totalVotes > 1 ? 's' : ''}  `));
-    } else {
-      messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
-    }
-    const percentages = calculatePercentages(pollInfo.voteCounts);
-    messageArray.push(convertAnswerLine('A', pollInfo.poll.a, `${percentages.a.pct}%`, percentages.a.isWinning));
-    messageArray.push(convertAnswerLine('B', pollInfo.poll.b, `${percentages.b.pct}%`, percentages.b.isWinning));
-    if (pollInfo.poll.c !== '') {
-      messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
-    } else {
-      messageArray.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    }
-    sendMessage({
-      subId: data.subId,
-      apiKey: data.apiKey,
-      apiSecret: data.apiSecret,
-    }, messageArray);
-  },
+    try: {
+
+        const pollInfo = await poll.getBySub(data.subId);
+        let pollClosed = false;
+        if (!pollInfo.poll.isOpen || new Date() > moment(pollInfo.poll.openUntil).toDate()) {
+          console.log('Poll is closed or expired');
+          pollClosed = true;
+        }
+        const messageArray = [
+          // Title line
+          [
+            65, 65, 65, 65, 65, 65, 65, 0, 0, 16, 15, 12, 12, 0, 0, 65, 65, 65, 65, 65, 65, 65,
+          ],
+        ];
+        messageArray.push(convertLine(`  vbpoll.app/${pollInfo.pollID}  `));
+        if (pollInfo.voteCounts.totalVotes === 1 && !pollClosed) {
+          messageArray.push(convertLine('        1 vote        '));
+        } else if (pollClosed) {
+          console.log('Poll is closed');
+          messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} vote${pollInfo.voteCounts.totalVotes > 1 ? 's' : ''}  `));
+        } else {
+          messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
+        }
+        const percentages = calculatePercentages(pollInfo.voteCounts);
+        messageArray.push(convertAnswerLine('A', pollInfo.poll.a, `${percentages.a.pct}%`, percentages.a.isWinning));
+        messageArray.push(convertAnswerLine('B', pollInfo.poll.b, `${percentages.b.pct}%`, percentages.b.isWinning));
+        if (pollInfo.poll.c !== '') {
+          messageArray.push(convertAnswerLine('C', pollInfo.poll.c, `${percentages.c.pct}%`, percentages.c.isWinning));
+        } else {
+          messageArray.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        }
+        sendMessage({
+          subId: data.subId,
+          apiKey: data.apiKey,
+          apiSecret: data.apiSecret,
+        }, messageArray);
+      },
+  } catch(error) {
+    console.log(error)
+  }
 };
