@@ -60,6 +60,32 @@ module.exports = {
         { upsert: true, new: true, runValidators: true },
       );
     },
+    resetVotes: async (pollID) => new Promise((resolve, reject) => {
+      Poll.findOneAndUpdate(
+        { pollID },
+        {
+          votes: [],
+          voteCounts: {
+            totalVotes: 0,
+            a: 0,
+            b: 0,
+            c: 0,
+          },
+        },
+      )
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    }),
+    updateStatus: async (pollID, status) => new Promise(async (resolve, reject) => {
+      const document = await Poll.findOne({ pollID });
+      document.poll.isOpen = status;
+      Poll.findOneAndUpdate(
+        { pollID },
+        document,
+      )
+        .then(() => resolve())
+        .catch(() => reject(err));
+    }),
   },
   subscription: {
     add: async (data) => {

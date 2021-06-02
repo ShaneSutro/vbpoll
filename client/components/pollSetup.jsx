@@ -19,7 +19,7 @@ const PollSetup = (props) => {
     pollID,
     errors,
   } = props.state;
-  const { onChange, save } = props.actions;
+  const { onChange, save, resetVotes, updateStatus } = props.actions;
   return (
     <div className="main">
       <VB.Title>VB Polls</VB.Title>
@@ -40,10 +40,11 @@ const PollSetup = (props) => {
         <VB.RadioButtons options={[{ id: '0', name: 'Allow 1 Vote Per IP Address' }, { id: '1', name: 'Allow Unlimited Votes' }]} onValueChange={(val) => onChange(val, 'allowUnlimitedVotes')} value={poll.allowUnlimitedVotes} />
         <VB.Button onClick={save} buttonType="primary">{updating && !newPoll ? 'Update' : 'Save'}</VB.Button>
         {poll.isOpen
-          ? <VB.Button buttonType="danger" endIcon={<VB.Icon color="white" type="close" />}>Close Poll</VB.Button>
+          ? <VB.Button onClick={updateStatus} buttonType="danger" endIcon={<VB.Icon color="white" type="close" />}>Close Poll</VB.Button>
           : newPoll
             ? null
-            : <VB.Button buttonType="outline" endIcon={<VB.Icon color="white" type="check" />}>Open Poll</VB.Button>}
+            : <VB.Button onClick={updateStatus} buttonType="outline" endIcon={<VB.Icon color="white" type="check" />}>Open Poll</VB.Button>}
+        <VB.Button onClick={resetVotes} buttonType="danger">Reset Vote Counts</VB.Button>
         <VB.Medium>Problems? Send me an email or find me on Twitter at @shanesutro</VB.Medium>
       </div>
     </div>

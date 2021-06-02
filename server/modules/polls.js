@@ -50,5 +50,10 @@ router.get('/find/:subscription', async (req, res) => {
   }
 });
 
+router.post('/update-status', (req, res) => {
+  poll.updateStatus(req.body.pollID, req.body.status)
+    .then(() => res.sendStatus(200))
+    .catch((err) => res.status(500).send(err));
+});
 
 module.exports = router;

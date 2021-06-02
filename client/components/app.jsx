@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
+import * as VB from '@vestaboard/installables';
 import moment from 'moment';
 import PollSetup from './pollSetup';
 import Vote from './vote';
@@ -44,11 +45,20 @@ class App extends React.Component {
         b: '',
         c: '',
       },
+      toast: {
+        message: '',
+        severity: '',
+        open: false,
+      },
     };
     this.inputFieldChange = this.inputFieldChange.bind(this);
     this.savePoll = this.savePoll.bind(this);
     this.getVoteStatus = this.getVoteStatus.bind(this);
     this.saveVote = this.saveVote.bind(this);
+    this.resetVotes = this.resetVotes.bind(this);
+    this.closeToast = this.closeToast.bind(this);
+    this.showToast = this.showToast.bind(this);
+    this.updateStatus = this.updateStatus.bind(this);
   }
 
   componentDidMount() {
@@ -189,9 +199,12 @@ class App extends React.Component {
           }
           const votedForButton = document.getElementsByClassName(`answer-${option}`)[0];
           votedForButton.classList.add('chosen');
+          this.showToast('Vote saved!', 'successs');
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        this.showToast('Whoops, something went wrong.', 'error');
+      });
   }
 
   inputFieldChange(val, inputName) {
@@ -213,16 +226,59 @@ class App extends React.Component {
     this.setState({ poll: { ...newPollState }, updating });
   }
 
+  resetVotes() {
+    const { pollID } = this.state;
+    fetch('/vote/reset/all', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pollID }),
+    })
+      .then(() => {
+        this.showToast('Votes reset!', 'success');
+        // this.setState({ toast: { message: 'Votes reset!', severity: 'success', visible: true } });
+      })
+      .catch((err) => {
+        this.showToast('Error resetting votes!', 'error');
+        // this.setState({ toast: { message: 'Error resetting votes!', severity: 'error', visible: true } });
+      });
+  }
+
+  updateStatus() {
+    const { poll, pollID } = this.state;
+    fetch('/polls/update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pollID, status: !poll.isOpen }),
+    })
+      .then(() => {
+        this.showToast(`Poll is now ${!poll.isOpen ? 'open' : 'closed'}`, 'success')
+        this.componentDidMount();
+      })
+      .catch((err) => this.showToast('Error saving poll status!', 'error'));
+  }
+
+  showToast(message, severity) {
+    this.setState({ toast: { message, severity, visible: true } });
+  }
+
+  closeToast() {
+    const { toast } = this.state;
+    toast.visible = false;
+    this.setState({ toast });
+  }
+
   render() {
-    const { poll } = this.state;
+    const { poll, toast } = this.state;
     return (
       <Router>
         <Switch>
           <Route exact path="/edit">
-            <PollSetup actions={{ onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
+            <VB.Toast severity={toast.severity} message={toast.message} open={toast.visible} onClose={this.closeToast} />
+            <PollSetup actions={{ updateStatus: this. updateStatus, resetVotes: this.resetVotes, onChange: this.inputFieldChange, save: this.savePoll }} state={{ ...this.state }} />
           </Route>
           <Route path="/:id">
-            <Vote actions={{ saveVote: this.saveVote }} poll={poll} />
+            <VB.Toast severity={toast.severity} message={toast.message} open={toast.visible} onClose={this.closeToast} />
+            <Vote actions={{ showToast: this.showToast, saveVote: this.saveVote }} poll={poll} />
           </Route>
         </Switch>
       </Router>
