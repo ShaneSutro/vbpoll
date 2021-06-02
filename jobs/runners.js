@@ -88,13 +88,13 @@ module.exports = {
         65, 65, 65, 65, 65, 65, 65, 0, 0, 16, 15, 12, 12, 0, 0, 65, 65, 65, 65, 65, 65, 65,
       ],
     ];
-    messageArray.push(convertLine(`  vbpoll.com/${pollInfo.pollID}  `));
+    messageArray.push(convertLine(`  vbpoll.app/${pollInfo.pollID}  `));
     console.log(pollClosed);
     if (pollInfo.voteCounts.totalVotes === 1 && !pollClosed) {
       messageArray.push(convertLine('        1 vote        '));
     } else if (pollClosed) {
       console.log('Poll is closed');
-      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} vote${pollInfo.voteCounts.totalVotes > 1 ? 's' : ' '}  `));
+      messageArray.push(convertLine(`  closed - ${pollInfo.voteCounts.totalVotes} vote${pollInfo.voteCounts.totalVotes > 1 ? 's' : ''}  `));
     } else {
       messageArray.push(convertLine(`       ${pollInfo.voteCounts.totalVotes} votes       `));
     }
