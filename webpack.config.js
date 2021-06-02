@@ -3,15 +3,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: './client/index.jsx',
+  entry: path.resolve(__dirname, '/client/index.jsx'),
   target: 'web',
   mode: 'production',
-  // devServer: {
-  //   historyApiFallback: true,
-  //   proxy: {
-  //     '**': 'http://localhost:3000',
-  //   },
-  // },
+  devServer: {
+    historyApiFallback: true,
+    proxy: {
+      '**': 'http://localhost:3000',
+    },
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
