@@ -26,7 +26,7 @@ const PollSetup = (props) => {
         Set up a poll below and vote at
         {' '}
         <i>
-          https://vbpoll.app/
+          https://www.vbpoll.app/
           {pollID}
         </i>
       </VB.SubTitle2>
