@@ -204,6 +204,7 @@ class App extends React.Component {
     })
       .then((res) => {
         if (res.status === 201) {
+          this.setState({ userVotedFor: option });
           // const allAnswerButtons = document.getElementsByClassName('answer');
           // for (const button of allAnswerButtons) {
           //   button.classList.remove('chosen');

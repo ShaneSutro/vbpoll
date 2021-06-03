@@ -14,9 +14,7 @@ const errorPhrases = [
 
 const Vote = ({ poll, actions, chosen }) => {
   const { id } = useParams();
-  console.log(id);
   const { saveVote } = actions;
-
   return (
     <div className="vote">
       <div className="title">
@@ -35,7 +33,7 @@ const Vote = ({ poll, actions, chosen }) => {
         ) : !poll.isOpen ? (
           <div>
             <div className="answer-set">
-              <div className={`answer answer-a ${chosen === 'a' ? 'chosen' : ''}`}>
+              <div className={chosen === 'a' ? 'chosen' : ''}>
                 <V.Button
                   onClick={() => {}}
                   buttonType="outline"
@@ -46,7 +44,7 @@ const Vote = ({ poll, actions, chosen }) => {
                   {poll.a}
                 </V.Button>
               </div>
-              <div className={`answer answer-b ${chosen === 'b' ? 'chosen' : ''}`}>
+              <div className={chosen === 'b' ? 'chosen' : ''}>
                 <V.Button
                   onClick={() => {}}
                   buttonType="outline"
@@ -57,7 +55,7 @@ const Vote = ({ poll, actions, chosen }) => {
                   {poll.b}
                 </V.Button>
               </div>
-              <div className={`answer answer-c ${chosen === 'c' ? 'chosen' : ''}`}>
+              <div className={chosen === 'c' ? 'chosen' : ''}>
                 {poll.c ? (
                   <V.Button
                     onClick={() => {}}
@@ -75,7 +73,7 @@ const Vote = ({ poll, actions, chosen }) => {
           </div>
         ) : (
           <div className="answer-set">
-            <div className="answer answer-a">
+            <div className={chosen === 'a' ? 'chosen' : ''}>
               <V.Button
                 onClick={() => saveVote('a')}
                 buttonType="outline"
@@ -86,7 +84,7 @@ const Vote = ({ poll, actions, chosen }) => {
                 {poll.a}
               </V.Button>
             </div>
-            <div className="answer answer-b">
+            <div className={chosen === 'b' ? 'chosen' : ''}>
               <V.Button
                 onClick={() => saveVote('b')}
                 buttonType="outline"
@@ -97,7 +95,7 @@ const Vote = ({ poll, actions, chosen }) => {
                 {poll.b}
               </V.Button>
             </div>
-            <div className="answer answer-c">
+            <div className={chosen === 'c' ? 'chosen' : ''}>
               {poll.c ? (
                 <V.Button
                   onClick={() => saveVote('c')}
