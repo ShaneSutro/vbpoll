@@ -100,15 +100,22 @@ class App extends React.Component {
         }
         return initial;
       })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 204) {
+          return null;
+        }
+        return response.json();
+      })
       .then((poll) => {
-        this.setState({
-          newPoll: false,
-          poll: poll.poll,
-          previouslySaved: poll.poll,
-          pollID: poll.pollID,
-          subId,
-        });
+        if (poll) {
+          this.setState({
+            newPoll: false,
+            poll: poll.poll,
+            previouslySaved: poll.poll,
+            pollID: poll.pollID,
+            subId,
+          });
+        }
       })
       .catch((err) => console.error(err));
   }
@@ -122,12 +129,6 @@ class App extends React.Component {
         userHasVoted = data.voted;
         userVotedFor = data.votedForOption;
         this.setState({ userHasVoted, userVotedFor });
-      }).then(() => {
-        if (this.state.poll.allowUnlimitedVotes === '0') {
-          document
-            .getElementsByClassName(`answer-${userVotedFor}`)[0]
-            .classList.add('chosen');
-        }
       });
   }
 
@@ -203,14 +204,14 @@ class App extends React.Component {
     })
       .then((res) => {
         if (res.status === 201) {
-          const allAnswerButtons = document.getElementsByClassName('answer');
-          for (const button of allAnswerButtons) {
-            button.classList.remove('chosen');
-          }
-          const votedForButton = document.getElementsByClassName(
-            `answer-${option}`,
-          )[0];
-          votedForButton.classList.add('chosen');
+          // const allAnswerButtons = document.getElementsByClassName('answer');
+          // for (const button of allAnswerButtons) {
+          //   button.classList.remove('chosen');
+          // }
+          // const votedForButton = document.getElementsByClassName(
+          //   `answer-${option}`,
+          // )[0];
+          // votedForButton.classList.add('chosen');
           this.showToast('Vote saved!', 'successs');
         }
       })
@@ -294,7 +295,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { poll, toast } = this.state;
+    const { poll, toast, userVotedFor } = this.state;
     return (
       <Router>
         <Switch>
@@ -326,6 +327,7 @@ class App extends React.Component {
             <Vote
               actions={{ showToast: this.showToast, saveVote: this.saveVote }}
               poll={poll}
+              chosen={userVotedFor}
             />
           </Route>
         </Switch>
