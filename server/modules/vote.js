@@ -10,29 +10,40 @@ router.post('/reset/all', (req, res) => {
     .catch((err) => res.status(500).send(err));
 });
 
-router.post('/:id/:ip', (req, res) => {
-  console.log(req.cookies);
-  console.log(`Saving vote option '${req.body.option}' for poll ${req.params.id} and user ${req.params.ip}`);
-  poll.vote(req.params.id, { ip: req.params.ip, option: req.body.option });
-  res.cookie(req.params.id, { user: nanoid(), choice: req.body.option });
-  res.sendStatus(201);
-});
-
-router.get('/verify/:id/:ip', async (req, res) => {
-  const { id, ip } = req.params;
+router.get('/verify/:id', async (req, res) => {
+  const { id } = req.params;
+  const cookie = req.cookies[id];
+  let user;
+  if (cookie) {
+    user = cookie.user;
+  }
   const doc = await poll.getById(id);
-  if (!id || !ip || !doc) {
-    res.sendStatus(301);
+  if (!id || !doc || !cookie) {
+    res.status(202).send({ voted: false });
   } else {
     const voted = { voted: false };
     for (let i = 0; i < doc.votes.length; i++) {
-      if (doc.votes[i].ip === ip) {
+      if (doc.votes[i].ip === user) {
         voted.voted = true;
         voted.votedForOption = doc.votes[i].option;
       }
     }
     res.status(200).send(voted);
   }
+});
+
+router.post('/:id', (req, res) => {
+  console.log('Saving vote...');
+  let user = nanoid();
+  if (!req.cookies[req.params.id]) {
+    res.cookie(req.params.id, { user, choice: req.body.option });
+  } else {
+    const cookie = req.cookies[req.params.id];
+    user = cookie.user;
+    res.cookie(req.params.id, { user, choice: req.body.option });
+  }
+  poll.vote(req.params.id, { ip: user, option: req.body.option });
+  res.sendStatus(201);
 });
 
 module.exports = router;

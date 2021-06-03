@@ -87,6 +87,7 @@ const PollSetup = (props) => {
         <VB.Select
           onValueChange={(val) => onChange(val, 'frequency')}
           value={poll.frequency}
+          error={errors.frequency}
           label="Update Vestaboard How Often?"
           options={frequencyOptions}
         />

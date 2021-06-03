@@ -31,7 +31,7 @@ class App extends React.Component {
         b: '',
         c: '',
         openUntil: '',
-        frequency: '0',
+        frequency: '',
       },
       poll: {
         allowUnlimitedVotes: '0',
@@ -49,6 +49,7 @@ class App extends React.Component {
         a: '',
         b: '',
         c: '',
+        frequency: '',
       },
       toast: {
         message: '',
@@ -113,22 +114,15 @@ class App extends React.Component {
   }
 
   async getVoteStatus(pollID) {
-    console.log(pollID);
-    let ip;
     let userHasVoted;
     let userVotedFor;
-    await fetch('https://api.ipify.org?format=json', { mode: 'cors' })
-      .then((res) => res.json())
-      .then((data) => {
-        ip = data.ip;
-        this.setState({ user: ip });
-      });
-    fetch(`/vote/verify/${pollID}/${ip}`)
+    fetch(`/vote/verify/${pollID}`)
       .then((res) => res.json())
       .then((data) => {
         userHasVoted = data.voted;
         userVotedFor = data.votedForOption;
         this.setState({ userHasVoted, userVotedFor });
+      }).then(() => {
         if (this.state.poll.allowUnlimitedVotes === '0') {
           document
             .getElementsByClassName(`answer-${userVotedFor}`)[0]
@@ -140,7 +134,7 @@ class App extends React.Component {
   savePoll() {
     const { poll, pollID, subId } = this.state;
     let didError = false;
-    ['question', 'a', 'b'].forEach((name) => {
+    ['question', 'a', 'b', 'frequency'].forEach((name) => {
       if (poll[name] === '') {
         didError = true;
         const { errors } = this.state;
@@ -163,7 +157,7 @@ class App extends React.Component {
       poll.isOpen = true;
       metadata.pollID = pollID;
       metadata.subId = subId;
-      this.updatePollFrequency();
+      // this.updatePollFrequency();
     }
     fetch('/polls/save', {
       method: 'POST',
@@ -174,10 +168,12 @@ class App extends React.Component {
       .then(() => {
         if (poll.frequency !== this.state.previouslySaved.frequency) {
           this.updatePollFrequency();
-          this.showToast('Saved!', 'success');
         }
       })
-      .then(() => this.componentDidMount())
+      .then(() => {
+        this.showToast('Saved!', 'success');
+        this.componentDidMount();
+      })
       .catch((err) => {
         console.error(err);
         this.showToas('Something went wrong!', 'error');
@@ -199,8 +195,8 @@ class App extends React.Component {
   }
 
   saveVote(option) {
-    const { pollID, user } = this.state;
-    fetch(`/vote/${pollID}/${user}`, {
+    const { pollID } = this.state;
+    fetch(`/vote/${pollID}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ option }),
