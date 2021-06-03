@@ -1,7 +1,7 @@
 const { Vesta } = require('vestaboard-api');
 const fetch = require('node-fetch');
+const dayjs = require('dayjs');
 const { poll } = require('../data/model');
-const moment = require('moment');
 
 const vesta = new Vesta('', '');
 
@@ -103,7 +103,7 @@ module.exports = {
       let pollClosed = false;
       if (
         !pollInfo.poll.isOpen ||
-        new Date() > moment(pollInfo.poll.openUntil).toDate()
+        new Date() > dayjs(pollInfo.poll.openUntil)
       ) {
         console.log('Poll is closed or expired');
         pollClosed = true;

@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-connect(process.env.MONGO_DB_URI)
+connect(process.env.MONGO_STAGE || process.env.MONGO_DB_URI)
   .then(() => {
     console.log('👍 Server');
     app.listen(process.env.PORT || 3000);

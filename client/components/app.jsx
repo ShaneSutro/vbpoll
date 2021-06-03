@@ -6,7 +6,7 @@ import {
   withRouter,
 } from 'react-router-dom';
 import * as VB from '@vestaboard/installables';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PollSetup from './pollSetup';
 import Vote from './vote';
 import sharedFunctions from '../sharedFunctions';
@@ -81,7 +81,7 @@ class App extends React.Component {
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
     const pollData = { ...this.state.poll };
-    pollData.openUntil = `${moment(nextWeek).format('YYYY-MM-DD')}T23:59`;
+    pollData.openUntil = `${dayjs(nextWeek).format('YYYY-MM-DD')}T23:59`;
     this.setState({ poll: pollData });
   }
 
@@ -174,10 +174,14 @@ class App extends React.Component {
       .then(() => {
         if (poll.frequency !== this.state.previouslySaved.frequency) {
           this.updatePollFrequency();
+          this.showToast('Saved!', 'success');
         }
       })
       .then(() => this.componentDidMount())
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        this.showToas('Something went wrong!', 'error');
+      });
   }
 
   updatePollFrequency() {
