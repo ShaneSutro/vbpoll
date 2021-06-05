@@ -14,6 +14,10 @@ const eraseSubscriptionJobs = async (subId) => {
   await job.scrubSubscription(subId);
 };
 
+const getDataFallback = async (token) => {
+
+};
+
 const buildCurrentHour = async (sub) => {
   const nextTimeframe = new Date();
   const scheduleHour = nextTimeframe.getHours();
@@ -21,6 +25,9 @@ const buildCurrentHour = async (sub) => {
   const associatedInstallation = await installation.get({
     installationId: sub.installationId,
   });
+  if (!associatedInstallation) {
+    console.log('No related installation.');
+  }
   const subJobs = [];
   for (let i = 0; i < 60; i += interval) {
     let scheduledFor = new Date(nextTimeframe);

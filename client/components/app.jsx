@@ -72,7 +72,8 @@ class App extends React.Component {
     const { pollID } = this.props.match.params;
     const { search } = this.props.location;
     const subId = new URLSearchParams(search).get('subscription_id');
-    this.setState({ subId });
+    const configToken = new URLSearchParams(search).get('subscription_configuration_token');
+    this.setState({ subId, configToken });
     this.getCurrentPoll(subId, pollID);
     if (!this.state.pollID && pollID === 'edit') {
       this.regenerateId();

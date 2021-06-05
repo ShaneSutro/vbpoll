@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   entry: path.resolve(__dirname, '/client/index.jsx'),
   target: 'web',
-  mode: 'production',
+  mode: 'development',
   devServer: {
     historyApiFallback: true,
     proxy: {

@@ -14,6 +14,7 @@ const schedule = async (sub) => {
   const associatedInstallation = await installation.get({
     installationId: sub.installationId,
   });
+  console.log('Installation:', associatedInstallation);
   const subJobs = [];
   for (let i = 0; i < 60; i += interval) {
     let scheduledFor = new Date(nextTimeframe);
