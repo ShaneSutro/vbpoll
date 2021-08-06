@@ -20,4 +20,4 @@ $ npm run test
 ```
 
 ### Next Steps
-As Vestaboard's API continues to evolve, we are making a switch to PostgreSQL as a relational database is now closer to the shape of the interface Vestaboard makes available
+As Vestaboard's API continues to evolve, we are making a switch to PostgreSQL as a relational database is now closer to the shape of the interface Vestaboard makes available. Expect changes and most likely a pretty big overhaul in the coming days and weeks.
