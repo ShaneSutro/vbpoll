@@ -1,6 +1,6 @@
 # vbpoll
 A polling system for Vestaboard
-
+Currently in development
 
 ### Installation / setup
 ```sh
@@ -16,7 +16,7 @@ $ npm run backend
 
 ### Testing
 ```sh
-$ npm run test 
+$ npm run test
 ```
 
 ### Next Steps
